@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using ServiceStack.Redis;
 
 namespace frontend.Controllers
@@ -19,7 +20,7 @@ namespace frontend.Controllers
         public ActionResult<string> Get()
         {
             var count = _redisClient.IncrementValue("hits");
-            return $"You are visitor no. {count}";
+            return $"You are visitor no. {count} \n(host: {Environment.MachineName})";
         }
     }
 }
