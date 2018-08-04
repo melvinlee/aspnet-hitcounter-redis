@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,8 @@ namespace frontend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(x => new RedisManagerPool(Configuration["RedisConnection"]));
-            services.AddTransient<IRedisClient>(x => x.GetService<RedisManagerPool>().GetClient());
+            //services.AddTransient<IRedisClient>(x => x.GetService<RedisManagerPool>().GetClient());
+            services.AddTransient<Lazy<IRedisClient>>(provider => new Lazy<IRedisClient>(() => provider.GetService<RedisManagerPool>().GetClient()));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

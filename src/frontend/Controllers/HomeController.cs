@@ -8,9 +8,9 @@ namespace frontend.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IRedisClient _redisClient;
+        private readonly Lazy<IRedisClient> _redisClient;
 
-        public HomeController(IRedisClient redisClient)
+        public HomeController(Lazy<IRedisClient> redisClient)
         {
             _redisClient = redisClient;
         }
@@ -19,7 +19,7 @@ namespace frontend.Controllers
         [HttpGet]
         public ActionResult<string> Get()
         {
-            var count = _redisClient.IncrementValue("hits");
+            var count = _redisClient.Value.IncrementValue("hits");
             return $"You are visitor no. {count} \n(host: {Environment.MachineName})";
         }
     }
