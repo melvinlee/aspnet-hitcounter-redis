@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiceStack.Redis;
 
 namespace frontend.Controllers
 {
@@ -6,11 +7,18 @@ namespace frontend.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        // GET api/values
+        private readonly IRedisClient _redisClient;
+
+        public HomeController(IRedisClient redisClient)
+        {
+            _redisClient = redisClient;
+        }
+
+        // GET /
         [HttpGet]
         public ActionResult<string> Get()
         {
-            var count = 0;
+            var count = _redisClient.IncrementValue("hits");
             return $"You are visitor no. {count}";
         }
     }
